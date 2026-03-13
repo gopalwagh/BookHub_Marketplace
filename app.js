@@ -1,0 +1,53 @@
+const express = require('express');
+const path = require('path');
+const session = require("express-session");
+require("dotenv").config();
+const mongoose = require('mongoose');
+
+const app = express();
+
+const authRouter = require('./routes/authRoutes');
+const homeRouter = require("./routes/homeRoutes");
+const hostRouter = require('./routes/hostRoutes');
+const userRouter = require('./routes/userRoutes');
+const errorsController = require('./controllers/errors');
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static('public'));
+
+app.set('views', path.join(__dirname, "views"));
+app.set('view engine', 'ejs');
+
+app.use(session({
+  secret: "secretkey",
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use((req, res, next) => {
+  res.locals.message = req.session.message;
+  delete req.session.message;
+  res.locals.user = req.session.user;
+  next();
+});
+
+app.use(homeRouter);
+app.use(authRouter);
+app.use("/host",hostRouter);
+app.use("/user",userRouter);
+
+app.use(errorsController.pageNotFound);
+
+const PORT = 3000;
+
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+  console.log('Connected to Mongo');
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+})
+.catch(err => {
+  console.log('Error while connecting to Mongo: ', err);
+});

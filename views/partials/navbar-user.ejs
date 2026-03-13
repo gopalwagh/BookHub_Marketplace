@@ -1,0 +1,21 @@
+<nav class="bg-gray-900 text-white px-6 py-3 flex justify-between">
+
+  <div class="font-bold text-lg">
+    BookManager
+  </div>
+
+  <div class="space-x-4">
+    <a href="/" class="hover:text-gray-300">Home</a>
+    <a href="/books" class="hover:text-gray-300">Browse Books</a>
+    <a href="/cart" class="hover:text-gray-300">Cart</a>
+
+    <% if(user) { %>
+      <a href="/logout" class="hover:text-red-400">Logout</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/signup">Signup</a>
+    <% } %>
+
+  </div>
+
+</nav>

@@ -1,0 +1,77 @@
+<%- include("../partials/head") %>
+
+<body class="bg-gray-100 min-h-screen">
+   <%- include("../partials/navbar-host") %>
+   <div class="max-w-6xl mx-auto p-6">
+      <!-- Welcome Section -->
+      <div class="mb-8">
+         <h1 class="text-3xl font-bold text-gray-800">
+            Welcome, <span class="text-blue-600"><%= user.name %></span> 👋
+         </h1>
+         <p class="text-gray-500 mt-1">
+            Manage your bookstore inventory and monitor stock levels.
+         </p>
+      </div>
+      <!-- Dashboard Cards -->
+      <div class="grid md:grid-cols-3 gap-6 mb-10">
+         <div class="bg-blue-500 text-white p-6 rounded-xl shadow-md hover:scale-105 transition">
+            <h2 class="text-lg font-semibold">📚 Total Books</h2>
+            <p class="text-4xl font-bold mt-2"><%= totalBooks %></p>
+         </div>
+         <div class="bg-yellow-400 text-white p-6 rounded-xl shadow-md hover:scale-105 transition">
+            <h2 class="text-lg font-semibold">⚠️ Low Stock</h2>
+            <p class="text-4xl font-bold mt-2"><%= lowStockBooks.length %></p>
+         </div>
+         <div class="bg-red-500 text-white p-6 rounded-xl shadow-md hover:scale-105 transition">
+            <h2 class="text-lg font-semibold">❌ Out Of Stock</h2>
+            <p class="text-4xl font-bold mt-2"><%= outOfStockBooks.length %></p>
+         </div>
+      </div>
+      <!-- Low Stock Section -->
+      <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+         <h2 class="text-2xl font-semibold text-yellow-600 mb-4">
+            ⚠️ Low Stock Books
+         </h2>
+         <% if(lowStockBooks.length === 0){ %>
+            <p class="text-gray-500">No low stock books.</p>
+         <% } %>
+
+         <div class="space-y-3">
+         <% lowStockBooks.forEach(book => { %>
+            <div class="flex justify-between items-center border p-4 rounded-lg hover:bg-gray-50">
+               <span class="font-medium text-gray-700">
+                  <%= book.title %>
+               </span>
+
+               <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+                  Stock: <%= book.stock %>
+               </span>
+            </div>
+         <% }) %>
+         </div>
+      </div>
+      <!-- Out of Stock Section -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+         <h2 class="text-2xl font-semibold text-red-600 mb-4">
+            ❌ Out Of Stock Books
+         </h2>
+         <% if(outOfStockBooks.length === 0){ %>
+            <p class="text-gray-500">All books are currently in stock.</p>
+         <% } %>
+         <div class="space-y-3">
+         <% outOfStockBooks.forEach(book => { %>
+           <div class="flex justify-between items-center border p-4 rounded-lg hover:bg-gray-50">
+               <span class="font-medium text-gray-700">
+                  <%= book.title %>
+               </span>
+               <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">
+                  Out of Stock
+               </span>
+            </div>
+         <% }) %>
+         </div>
+      </div>
+   </div>
+</body>
+
+<%- include("../partials/footer") %>
