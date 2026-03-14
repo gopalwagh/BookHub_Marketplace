@@ -19,6 +19,10 @@ const bookSchema = new mongoose.Schema({
         required : true,
         default : 0
     },
+    photoUrl : {
+        type : String,
+        requuired : true
+    },
     owner : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "User",

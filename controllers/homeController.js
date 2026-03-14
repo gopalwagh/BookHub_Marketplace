@@ -14,12 +14,12 @@ exports.getHome = async (req,res) => {
 
   const totalStores = await User.countDocuments({role:"host"});
   const totalUsers = await User.countDocuments({role:"user"});
-
+  const totalBooks = await Book.countDocuments();
   res.render("home",{
     pageTitle:"Home",
     totalStores,
     totalUsers,
-    totalBooks:0
+    totalBooks
   });
 
 };

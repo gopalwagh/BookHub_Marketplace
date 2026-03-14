@@ -41,7 +41,7 @@ exports.getAddBook = (req,res) => {
 
 exports.postAddBook = async (req,res) => {
   const { title, author, price, stock} = req.body;
-  const photoUrl = req.file.path;
+  const photoUrl = "/uploads/" + req.file.filename;
   const ownerId = req.session.user.id;
 
   await Book.create({
@@ -56,19 +56,82 @@ exports.postAddBook = async (req,res) => {
 }
 
 exports.getMyBooks = async (req,res) => {
-  console.log("My BOOKS RoUTE HIT");
+
+  const ownerId = req.session.user.id;
+  const page = parseInt(req.query.page) || 1;
+  const limit = 16;
+  const skip = (page-1)*limit;
+
+  const sortOption = req.query.sort;
+  let sort = {};
+
+  switch (sortOption) {
+    case "priceLow":
+      sort.price = 1;
+      break;
+    case "priceHigh":
+      sort.price = -1;
+      break;
+    case "nameAZ":
+      sort.title = 1;
+      break;
+    case "nameZA":
+      sort.title = -1;
+      break;
+    default:
+      break;
+  }
   
-  const books = await Book.find({
-    owner : req.session.user.id
-  });
+  const totalBooks = await Book.countDocuments({ owner: ownerId});
+
+  const books = await Book.find({ owner : ownerId })
+  .sort(sort)
+  .skip(skip)
+  .limit(limit)
+
+  const totalPages = Math.ceil(totalBooks/limit);
 
   res.render("role/my-books",{
     pageTitle : "My Books",
-    books
+    books,
+    totalPages,
+    currentPage : page,
+    sortOption
   })
 }
 
 exports.getLogout = (req,res) => {
   console.log("ya it's work")
   res.redirect("/login")
+}
+
+exports.getEditBook = async (req,res,next) => {
+  const bookId = req.params.id;
+  const book = await Book.findById(bookId);
+
+  res.render("role/edit-book",{
+    pageTitle : "Edit Book",
+    book
+  });
+};
+
+exports.postEditBook = async(req,res) => {
+  const {title,author,price,stock} = req.body;
+  const bookId = req.params.id;
+  await Book.findByIdAndUpdate(bookId,{
+    title,
+    author,
+    price,
+    stock
+  });
+  res.redirect("/host/books")
+}
+
+exports.postDeleteBook = async (req,res) => {
+  const bookId = req.params.id;
+  console.log("Deleting book:", bookId);
+  const bookdeleted = await Book.findByIdAndDelete(bookId);
+  console.log("Book deleted successfully",bookdeleted);
+  
+  res.redirect("/host/books");
 }

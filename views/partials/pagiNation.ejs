@@ -1,0 +1,8 @@
+<% for(let i = 1; i <= totalPages; i++){ %>
+  <a
+    href="/host/books?page=<%= i %>&sort=<%= sortOption || '' %>"
+    class="px-3 py-1 border rounded
+    <%= currentPage === i ? 'bg-blue-500 text-white' : '' %>">
+    <%= i %>
+  </a>
+<% } %>
