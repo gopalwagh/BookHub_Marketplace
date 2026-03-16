@@ -1,4 +1,4 @@
-exports.pageNotFound = (req, res, next) => {
+exports.pageNotFound = (req, res) => {
   res
     .status(404)
     .render("404", { 

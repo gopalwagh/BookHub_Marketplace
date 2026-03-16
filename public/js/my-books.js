@@ -42,7 +42,7 @@ function closeNoResultsMessage() {
   noResultsMessage.classList.add("hidden");
   searchInput.value = ""; // clear search box
   const books = document.querySelectorAll(".book-card");
-  books.forEach(book => book.style.display = "block"); // show all books again
+  books.forEach(book => book.style.display = "block"); 
 }
 
 // filter ka code 

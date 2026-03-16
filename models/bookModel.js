@@ -7,7 +7,8 @@ const bookSchema = new mongoose.Schema({
     },
     author :{
         type : String,
-        required : true
+        required : true,
+        trim : true
     },
     price :{
         type :Number,
@@ -21,13 +22,15 @@ const bookSchema = new mongoose.Schema({
     },
     photoUrl : {
         type : String,
-        requuired : true
+        required : true
     },
     owner : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "User",
         required: true
     }
-})
+},{
+    timestamps :true
+});
 
 module.exports = mongoose.model("Book",bookSchema);

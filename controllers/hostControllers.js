@@ -1,31 +1,39 @@
 const Book = require("../models/bookModel");
 
-exports.getDashboard = async (req,res,next) => {
+exports.getDashboard = async (req,res) => {
   
   if(!req.session.user || req.session.user.role !== "host"){
     return res.redirect("/login");
   }
 
   const ownerId = req.session.user.id;
-
-  const totalBooks = await Book.countDocuments({ owner: ownerId });
-
-  const lowStockBooks = await Book.find({
-    owner: ownerId,
-    stock: { $lt: 5 }
+  
+  const books = await Book.find({owner : ownerId})
+  const totalBooks = books.length;;
+  const lowStockBooks = books.filter(book => book.stock <5);
+  const outOfStockBooks = books.filter(book => book.stock === 0);
+ 
+  let totalIntventoryValue = 0;
+  books.forEach(book => {
+    totalIntventoryValue += book.price * book.stock;
   });
 
-  const outOfStockBooks = await Book.find({
-    owner: ownerId,
-    stock: 0
-  });
+  const authors = await Book.distinct("author",{owner: ownerId});
+  const totalAuthors = authors.length;
+
+  const recentBooks = await Book.find({owner: ownerId})
+  .sort({createdAt : -1})
+  .limit(5);
 
   res.render("role/host",{
     pageTitle :"Host DashBoard",
     user : req.session.user,
     totalBooks,
     lowStockBooks,
-    outOfStockBooks
+    outOfStockBooks,
+    totalAuthors,
+    totalIntventoryValue,
+    recentBooks
   });
 };
 
