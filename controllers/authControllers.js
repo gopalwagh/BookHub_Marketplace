@@ -34,6 +34,7 @@ exports.postLogin = async (req, res) => {
     name : user.firstName,
     role :user.role,
   }
+  req.session.isLoggedIn = true;
   console.log("session_user",req.session.user )
   res.redirect("/");
 };

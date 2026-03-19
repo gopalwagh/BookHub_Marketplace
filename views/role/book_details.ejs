@@ -1,0 +1,95 @@
+<%- include("../partials/head") %>
+
+<body class="bg-gray-100 min-h-screen">
+  <% if (user) { %>
+    <%- include("../partials/navbar-user") %>
+  <% } else { %>
+    <%- include("../partials/navbar") %>
+  <% } %>
+
+  <div class="max-w-6xl mx-auto mt-10 px-4">
+
+    <!-- 📘 Main Section -->
+    <div class="grid md:grid-cols-2 gap-8 bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition">
+
+      <!-- 📸 Image -->
+      <div class="flex items-center justify-center">
+        <img 
+          src="<%= book.photoUrl %>" 
+          alt="<%= book.title %>"
+          class="w-full h-[450px] object-contain rounded-xl shadow-md">
+      </div>
+
+      <!-- 📄 Details -->
+      <div class="flex flex-col justify-between">
+        <div>
+          <h1 class="text-4xl font-bold mb-3 text-gray-800"><%= book.title %></h1>
+          <p class="text-gray-500 mb-5 italic">by <%= book.author %></p>
+
+          <p class="text-gray-700 mb-6 leading-relaxed">
+            <%= book.description || "No description available." %>
+          </p>
+
+          <p class="text-lg font-semibold mb-3">
+            Category: <span class="text-blue-600 font-medium"><%= book.category %></span>
+          </p>
+
+          <% if (book.stock === 0) { %>
+            <span class="inline-block bg-red-100 text-red-600 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+              Out of stock
+            </span>
+          <% } %>
+
+          <h2 class="text-3xl text-blue-600 font-bold mt-4">
+            ₹<%= book.price %>
+          </h2>
+        </div>
+
+        <!-- 🛒 Actions -->
+        <div class="mt-8 flex gap-5">
+          <form action="/user/cart/add" method="POST">
+            <input type="hidden" name="bookId" value="<%= book._id %>">
+            <button 
+              class="flex items-center gap-2 bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition font-semibold">
+              🛒 Add to Cart
+            </button>
+          </form>
+
+          <form action="/user/order/buy-now" method="POST">
+            <input type="hidden" name="bookId" value="<%= book._id %>">
+            <button 
+              class="flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition font-semibold">
+              ⚡ Buy Now
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔥 Related Books -->
+    <div class="mt-14">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">Related Books</h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <% relatedBooks.forEach(b => { %>
+          <div class="bg-white p-4 rounded-xl shadow hover:shadow-md transition transform hover:-translate-y-1">
+            <img 
+              src="<%= b.photoUrl %>" 
+              alt="<%= b.title %>"
+              class="w-full h-40 object-contain rounded-md mb-3">
+
+            <h3 class="text-sm font-semibold text-gray-800 truncate"><%= b.title %></h3>
+            <p class="text-blue-600 font-bold text-sm mt-1">₹<%= b.price %></p>
+
+            <a href="/user/books/<%= b._id %>" 
+               class="text-xs text-blue-500 hover:underline mt-2 inline-block">
+              View →
+            </a>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <%- include("../partials/footer") %>
+</body>

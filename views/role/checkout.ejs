@@ -1,0 +1,65 @@
+<%- include("../partials/head") %>
+
+<body class="bg-gray-50">
+<%- include("../partials/navbar-user") %>
+<div class="max-w-5xl mx-auto mt-10 px-4">
+
+  <h2 class="text-3xl font-bold mb-6 text-center">
+    🧾 Checkout
+  </h2>
+
+  <% if (items.length > 0) { %>
+
+    <div class="bg-white shadow rounded-lg p-6">
+
+      <!-- Items -->
+      <% items.forEach(item => { %>
+        <div class="flex justify-between items-center border-b py-4">
+
+          <div class="flex items-center gap-4">
+            <img 
+              src="<%= item.photoUrl %>" 
+              class="w-20 h-20 object-cover rounded">
+
+            <div>
+              <h3 class="font-semibold"><%= item.title %></h3>
+              <p class="text-sm text-gray-500">
+                Qty: <%= item.quantity %>
+              </p>
+            </div>
+          </div>
+
+          <p class="text-blue-600 font-bold">
+            ₹<%= item.price * item.quantity %>
+          </p>
+
+        </div>
+      <% }) %>
+
+      <!-- Total -->
+      <div class="flex justify-between items-center mt-6">
+        <h3 class="text-xl font-bold">Total Amount:</h3>
+        <h3 class="text-2xl text-green-600 font-bold">₹<%= total %></h3>
+      </div>
+
+      <!-- Place Order -->
+      <form action="/user/order" method="POST" class="text-right mt-6">
+        <button 
+          class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg">
+          Place Order
+        </button>
+      </form>
+
+    </div>
+
+  <% } else { %>
+
+    <p class="text-center text-gray-500 mt-10 text-lg">
+      Your cart is empty 😢
+    </p>
+
+  <% } %>
+
+</div>
+<%- include("../partials/footer") %>
+</body>

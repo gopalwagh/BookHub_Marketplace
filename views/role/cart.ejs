@@ -1,0 +1,74 @@
+<%- include("../partials/head") %>
+
+<body class="bg-gray-100 min-h-screen">
+  <%- include("../partials/navbar-user") %>
+
+  <div class="max-w-4xl mx-auto mt-10 px-4">
+
+    <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">
+      🛒 Your Cart
+    </h2>
+    <% if (errorMessage) { %>
+      <div class="mb-4 p-4 bg-red-100 border border-red-400 text-bold text-red-700 rounded-lg">
+        <%= errorMessage %>
+      </div>
+    <% } %>
+
+    <% if (items.length > 0) { %>
+      <div class="bg-white shadow-lg rounded-2xl p-6">
+
+        <% items.forEach(item => { %>
+          <div class="flex justify-between items-center border-b py-5 hover:bg-gray-50 transition rounded-lg px-2">
+
+            <!-- Item Info -->
+            <div class="flex items-center gap-5">
+              <img 
+                src="<%= item.photoUrl %>" 
+                alt="<%= item.title %>"
+                class="w-24 h-24 object-cover rounded-lg shadow-md">
+
+              <div>
+                <h3 class="font-semibold text-lg text-gray-800"><%= item.title %></h3>
+                <p class="text-sm text-gray-500">Qty: <%= item.quantity %></p>
+                <p class="text-blue-600 font-bold mt-1">₹<%= item.price %></p>
+              </div>
+            </div>
+
+            <!-- Remove Button -->
+            <form action="/user/cart/remove" method="POST">
+              <input type="hidden" name="bookId" value="<%= item._id %>">
+              <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition font-semibold">
+                ✖ Remove
+              </button>
+            </form>
+          </div>
+        <% }) %>
+
+        <!-- Total -->
+        <div class="flex justify-between items-center mt-8 border-t pt-6">
+          <h3 class="text-xl font-bold text-gray-800">Total:</h3>
+          <h3 class="text-2xl text-green-600 font-bold">₹<%= total %></h3>
+        </div>
+
+        <!-- Checkout -->
+        <div class="text-right mt-8">
+          <a href="/user/checkout" 
+             class="bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 transition font-semibold shadow-md">
+            ✅ Proceed to Checkout
+          </a>
+        </div>
+      </div>
+    <% } else { %>
+      <!-- Empty State -->
+      <div class="bg-white shadow rounded-xl p-10 text-center">
+        <p class="text-gray-500 text-lg">Your cart is empty 😢</p>
+        <a href="/user/books" 
+           class="mt-4 inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
+          Browse Books →
+        </a>
+      </div>
+    <% } %>
+  </div>
+  
+  <%- include("../partials/footer") %>
+</body>
