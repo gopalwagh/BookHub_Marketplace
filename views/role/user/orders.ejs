@@ -1,12 +1,17 @@
-<%- include("../partials/head") %>
+<%- include("../../partials/head") %>
 
 <body class="bg-gray-100">
-<%- include("../partials/navbar-user") %>
+<%- include("../../partials/navbar", { user: user }) %>
 <div class="max-w-6xl mx-auto mt-10 px-4">
 
   <h2 class="text-3xl font-bold text-center mb-8">
     📦 Your Orders
   </h2>
+  <% if (successMessage) { %>
+    <div id="toast" class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center font-semibold">
+      <%= successMessage %>
+    </div>
+  <% } %>
   <% if (orders.length > 0) { %>
     <% orders.forEach(order => { %>
       <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 mb-8 overflow-hidden border">
@@ -18,7 +23,19 @@
           </div>
           <div class="flex items-center gap-3">
             <span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
-              Completed
+              <% if(order.status === "pending") { %>
+                <span class="bg-yellow-100 text-yellow-700">
+                  🟡 Pending
+                </span>
+              <% } else if(order.status === "shipped") { %>
+                <span class="bg-blue-100 text-blue-700 ">
+                  🔵 Shipped
+                </span>
+              <% } else { %>
+                <span class="bg-green-100 text-green-700 ">
+                  🟢 Delivered
+                </span>
+              <% } %>
             </span>
             <span class="text-lg font-bold text-green-600">
               ₹<%= order.totalAmount %>
@@ -59,9 +76,17 @@
           <p class="text-sm text-gray-500">
             Order ID: <%= order._id.toString().slice(-6).toUpperCase() %>
           </p>
-          <button class="text-sm text-blue-600 hover:underline">
-            View Details
-          </button>
+          <p><a href="/user/<%= order._id %>/invoice"
+              class="ml-4 inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 
+                      text-white px-4 py-2 rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 
+                      hover:shadow-lg transition-all duration-300 text-sm font-medium">
+              <!-- Icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Download Invoice
+            </a>
+          </p>
         </div>
       </div>
     <% }) %>
@@ -83,5 +108,6 @@
     </div>
   <% } %>
 </div>
-<%- include("../partials/footer") %>
+<script src="/js/orders.js"></script>
+<%- include("../../partials/footer") %>
 </body>

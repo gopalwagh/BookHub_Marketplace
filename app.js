@@ -10,6 +10,7 @@ const authRouter = require('./routes/authRoutes');
 const homeRouter = require("./routes/homeRoutes");
 const hostRouter = require('./routes/hostRoutes');
 const userRouter = require('./routes/userRoutes');
+const profileRouter = require("./routes/profileRoutes")
 const errorsController = require('./controllers/errors');
 
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +24,10 @@ app.set('view engine', 'ejs');
 app.use(session({
   secret: "secretkey",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie:{
+    httpOnly: true
+  }
 }));
 
 app.use((req, res, next) => {
@@ -35,6 +39,7 @@ app.use((req, res, next) => {
 
 app.use(homeRouter);
 app.use(authRouter);
+app.use(profileRouter);
 app.use("/host",hostRouter);
 app.use("/user",userRouter);
 

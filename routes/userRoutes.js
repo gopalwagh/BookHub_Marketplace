@@ -12,6 +12,7 @@ userRouter.get("/books/:bookId",userControllers.getBookDetails);
 userRouter.get("/cart",userControllers.getCart);
 userRouter.get("/checkout",isAuth,userControllers.getCheckout);
 userRouter.get("/orders",isAuth,userControllers.getOrders);
+userRouter.get("/:orderId/invoice",isAuth,userControllers.getInvoice);
 
 userRouter.post("/order",isAuth,userControllers.postOrder);
 userRouter.post("/cart/add",isAuth,userControllers.postAddToCart);

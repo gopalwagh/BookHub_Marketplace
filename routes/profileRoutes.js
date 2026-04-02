@@ -1,0 +1,11 @@
+const express = require("express");
+const { profileValidation } = require("../models/profileValidator");
+const profileController = require("../controllers/profileController");
+const isAuth = require("../models/isAuth");
+
+const profileRouter = express.Router();
+
+profileRouter.get("/profile", isAuth, profileController.getProfile);
+profileRouter.post("/profile", isAuth, profileValidation, profileController.postProfile);
+
+module.exports = profileRouter;

@@ -1,8 +1,8 @@
-<%- include("../partials/head") %>
+<%- include("../../partials/head") %>
 
 <body class="bg-gray-100 min-h-screen">
 
-<%- include("../partials/navbar-host") %>
+<%- include("../../partials/navbar", { user: user }) %>
 
 <div class="flex items-center justify-center py-12 px-4">
   <div class="w-full max-w-lg bg-white rounded-xl shadow-md p-8">
@@ -71,4 +71,4 @@
 </div>
 </body>
 
-<%- include("../partials/footer") %>
+<%- include("../../partials/footer") %>

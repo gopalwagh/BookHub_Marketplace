@@ -1,11 +1,7 @@
-<%- include("../partials/head") %>
+<%- include("../../partials/head") %>
 
 <body class="bg-gray-50 min-h-screen">
-  <% if (user) { %>
-    <%- include("../partials/navbar-user") %>
-  <% } else { %>
-    <%- include("../partials/navbar") %>
-  <% } %>
+  <%- include("../../partials/navbar", { user: user }) %>
 
   <div class="max-w-6xl mx-auto mt-10 px-4">
     <h2 class="text-3xl font-bold text-center mb-6">
@@ -112,5 +108,5 @@
       <% } %>
     </div>
   </div>
-  <%- include("../partials/footer") %>
+  <%- include("../../partials/footer") %>
 </body>

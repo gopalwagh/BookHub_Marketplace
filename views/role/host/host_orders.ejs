@@ -1,0 +1,159 @@
+<%- include("../../partials/head") %>
+
+<body class="bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 min-h-screen">
+
+<%- include("../../partials/navbar", { user: user }) %>
+
+<div class="max-w-6xl mx-auto mt-14 px-6">
+
+  <!-- Heading -->
+  <h2 class="text-4xl font-extrabold mb-12 text-center">
+    <span class="bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
+      📦 Host Orders
+    </span>
+  </h2>
+
+  <% if (orders.length === 0) { %>
+    <div class="text-center py-16">
+      <p class="text-lg text-gray-500 italic">No orders yet 🚫</p>
+    </div>
+  <% } %>
+
+  <% orders.forEach(order => { %>
+
+    <!-- Order Card -->
+    <div class="order-card">
+
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+
+        <div>
+          <p class="text-sm text-gray-600">
+            👤 <span class="font-semibold"><%= order.userId.firstName %></span>
+          </p>
+          <p class="text-xs text-gray-400">
+            📅 <%= new Date(order.createdAt).toLocaleDateString() %>
+          </p>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <% if(order.status === "pending") { %>
+            <span class="status yellow">⏳ Pending</span>
+          <% } else if(order.status === "shipped") { %>
+            <span class="status blue">🚚 Shipped</span>
+          <% } else { %>
+            <span class="status green">✅ Delivered</span>
+          <% } %>
+        </div>
+
+      </div>
+
+      <!-- Items -->
+      <div class="space-y-3">
+        <% order.items.forEach(item => { %>
+          <div class="item-row">
+            <div>
+              <p class="font-semibold text-gray-800"><%= item.bookId.title %></p>
+              <p class="text-xs text-gray-500">Qty: <%= item.quantity %></p>
+            </div>
+            <p class="price">
+              ₹<%= item.bookId.price * item.quantity %>
+            </p>
+          </div>
+        <% }) %>
+      </div>
+
+      <!-- Total -->
+      <div class="flex justify-between items-center mt-6 flex-wrap gap-4">
+
+        <p class="text-lg font-bold text-gray-800">
+          💰 ₹<%= order.totalAmount %>
+        </p>
+
+        <!-- Status Form -->
+        <form action="/host/order/status" method="POST" class="flex gap-2 items-center">
+          <input type="hidden" name="orderId" value="<%= order._id %>">
+
+          <select name="status" class="select">
+            <option value="pending">Pending</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+          </select>
+
+          <button class="update-btn">
+            Update
+          </button>
+        </form>
+
+      </div>
+
+    </div>
+
+  <% }) %>
+</div>
+
+</body>
+
+<%- include("../../partials/footer") %>
+
+<style>
+/* Card */
+.order-card {
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+/* Hover → NO movement */
+.order-card:hover {
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  border-color: #d1d5db;
+}
+
+/* Items */
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+/* Hover → only background change */
+.item-row:hover {
+  background: #f9fafb;
+}
+
+/* Status (clean chips) */
+.status {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.yellow { background: #fef3c7; color: #92400e; }
+.status.blue   { background: #e0f2fe; color: #1e40af; }
+.status.green  { background: #dcfce7; color: #166534; }
+
+/* Button */
+.update-btn {
+  background: linear-gradient(to right, #6366f1, #a855f7);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 500;
+  transition: box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+/* Hover → no zoom */
+.update-btn:hover {
+  opacity: 0.9;
+  box-shadow: 0 6px 16px rgba(99,102,241,0.3);
+}
+</style>

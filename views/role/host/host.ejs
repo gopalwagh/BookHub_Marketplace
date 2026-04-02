@@ -1,0 +1,200 @@
+<%- include("../../partials/head") %>
+
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen scroll-smooth">
+
+   <%- include("../../partials/navbar", { user: user }) %>
+
+   <div class="max-w-6xl mx-auto px-6 py-10">
+
+      <!-- Welcome -->
+      <div class="mb-10 animate-fadeIn">
+         <h1 class="text-4xl font-extrabold text-gray-800">
+            Welcome, 
+            <span class="bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
+               <%= user.name %>
+            </span> 👋
+         </h1>
+         <p class="text-gray-500 mt-2 text-lg">
+            Manage your bookstore with style & efficiency.
+         </p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid md:grid-cols-4 gap-6 mb-12">
+
+         <!-- Card -->
+         <div class="glass-card">
+            <p class="text-gray-500">📚 Total Books</p>
+            <h2 class="text-4xl font-bold mt-2 text-indigo-600"><%= totalBooks %></h2>
+         </div>
+
+         <div class="glass-card">
+            <p class="text-gray-500">💰 Inventory Value</p>
+            <h2 class="text-4xl font-bold mt-2 text-green-600">
+               ₹ <%= totalIntventoryValue.toLocaleString() %>
+            </h2>
+         </div>
+
+         <div class="glass-card">
+            <p class="text-gray-500">👨‍💻 Total Authors</p>
+            <h2 class="text-4xl font-bold mt-2 text-purple-600"><%= totalAuthors %></h2>
+         </div>
+
+         <div class="glass-card">
+            <p class="text-gray-500">❌ Out of Stock</p>
+            <h2 class="text-4xl font-bold mt-2 text-red-500"><%= outOfStockBooks.length %></h2>
+         </div>
+
+      </div>
+
+      <!-- Low Stock -->
+      <div class="section-card">
+         <h2 class="section-title text-yellow-600">⚠️ Low Stock Books</h2>
+
+         <% if(lowStockBooks.length === 0){ %>
+            <p class="text-gray-500">No low stock books.</p>
+         <% } %>
+
+         <div class="space-y-3">
+            <% lowStockBooks.forEach(book => { %>
+               <div class="list-item">
+                  <span><%= book.title %></span>
+                  <span class="badge-yellow">Stock: <%= book.stock %></span>
+               </div>
+            <% }) %>
+         </div>
+      </div>
+
+      <!-- Out of Stock -->
+      <div class="section-card">
+         <h2 class="section-title text-red-500">❌ Out Of Stock Books</h2>
+
+         <% if(outOfStockBooks.length === 0){ %>
+            <p class="text-gray-500">All books are in stock.</p>
+         <% } %>
+
+         <div class="space-y-3">
+            <% outOfStockBooks.forEach(book => { %>
+               <div class="list-item">
+                  <span><%= book.title %></span>
+                  <span class="badge-red">Out of Stock</span>
+               </div>
+            <% }) %>
+         </div>
+      </div>
+
+      <!-- Recent -->
+      <div class="section-card">
+         <h2 class="section-title text-indigo-600">📚 Recently Added</h2>
+
+         <% if(recentBooks.length === 0){ %>
+            <p class="text-gray-500">No recent books added.</p>
+         <% } %>
+
+         <ul class="divide-y">
+            <% recentBooks.forEach(book => { %>
+               <li class="flex justify-between py-3 hover:translate-x-1 transition">
+                  <span><%= book.title %> — <%= book.author %></span>
+                  <span class="text-gray-500">₹<%= book.price %></span>
+               </li>
+            <% }) %>
+         </ul>
+
+         <div class="mt-6 text-right">
+            <a href="/host/books" class="primary-btn">
+               View All Books →
+            </a>
+         </div>
+      </div>
+
+   </div>
+
+</body>
+
+<%- include("../../partials/footer") %>
+
+<!-- ✨ Styles -->
+<style>
+/* Smooth fade */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(12px);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  transition: all 0.3s;
+}
+.glass-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* Section container */
+.section-card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  animation: fadeIn 0.5s ease;
+}
+
+/* Section title */
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* List item */
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+.list-item:hover {
+  background: #f9fafb;
+  transform: translateX(5px);
+}
+
+/* Badges */
+.badge-yellow {
+  background: #fef3c7;
+  color: #b45309;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+.badge-red {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+/* Button */
+.primary-btn {
+  background: linear-gradient(to right, #6366f1, #a855f7);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.primary-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(99,102,241,0.4);
+}
+</style>

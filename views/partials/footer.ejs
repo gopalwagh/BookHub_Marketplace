@@ -1,36 +1,92 @@
-<footer class="bg-gray-900 text-gray-300 mt-12">
-  <div class="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+<footer class="mt-20 bg-gray-950 text-gray-300 relative overflow-hidden">
 
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-3">BookManager</h2>
-      <p class="text-sm text-gray-400">
-        A simple platform to manage and organize your books efficiently.
-        Add, track, and explore your personal library anytime.
+  <!-- Glow Background Effect -->
+  <div class="absolute inset-0 opacity-20 bg-gradient-to-tr from-indigo-500 via-purple-500 to-blue-500 blur-3xl"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 py-14 grid gap-10 
+              sm:grid-cols-2 md:grid-cols-3">
+
+    <!-- Brand -->
+    <div class="space-y-4">
+      <h2 class="text-3xl font-extrabold text-white flex items-center gap-2">
+        📚 <span class="bg-gradient-to-r from-indigo-400 to-purple-400 text-transparent bg-clip-text">BookHub</span>
+      </h2>
+
+      <p class="text-sm text-gray-400 leading-relaxed max-w-sm">
+        Manage, track, and explore your personal library with a smooth and modern experience.
       </p>
+
+      <!-- Social -->
+      <div class="flex gap-3 mt-4">
+        <a href="#" class="icon">F</a>
+        <a href="#" class="icon">T</a>
+        <a href="#" class="icon">I</a>
+        <a href="#" class="icon">G</a>
+      </div>
     </div>
 
+    <!-- Links -->
     <div>
-      <h2 class="text-xl font-semibold text-white mb-3">Quick Links</h2>
+      <h3 class="text-white font-semibold mb-4">Quick Links</h3>
       <ul class="space-y-2 text-sm">
-        <li><a href="/" class="hover:text-white transition">Home</a></li>
-        <li><a href="/books" class="hover:text-white transition">Browse Books</a></li>
-        <li><a href="/login" class="hover:text-white transition">Login</a></li>
-        <li><a href="/signup" class="hover:text-white transition">Signup</a></li>
+        <li><a href="/" class="link">Home</a></li>
+        <li><a href="/books" class="link">Browse Books</a></li>
+        <li><a href="/login" class="link">Login</a></li>
+        <li><a href="/signup" class="link">Signup</a></li>
       </ul>
     </div>
 
+    <!-- About -->
     <div>
-      <h2 class="text-xl font-semibold text-white mb-3">About</h2>
-      <p class="text-sm text-gray-400">
-        Built using Node.js, Express, MongoDB and EJS to demonstrate
-        a full-stack book management system.
+      <h3 class="text-white font-semibold mb-4">About</h3>
+      <p class="text-sm text-gray-400 leading-relaxed max-w-sm">
+        Built using Node.js, Express, MongoDB & EJS. Designed with focus on performance and clean UI.
       </p>
     </div>
 
   </div>
 
-  <div class="border-t border-gray-700 text-center py-4 text-sm text-gray-400">
-    © <%= new Date().getFullYear() %> BookManager • Built with ❤️ for learning full-stack development
+  <!-- Bottom -->
+  <div class="border-t border-gray-800 text-center py-5 text-sm text-gray-500">
+    © <%= new Date().getFullYear() %> 
+    <span class="text-white font-medium">BookHub</span> • Built with ❤️
   </div>
-  <div class="border-t border-gray-700 text-center py-2 text-sm text-gray-400" >created by Gopal Wagh for just learning purpose</div>
+
+  <div class="text-center pb-4 text-xs text-gray-600">
+    Created by <span class="text-blue-400 bold">Gopal Wagh</span>
+  </div>
+
 </footer>
+
+<style>
+  /* Links */
+  .link {
+    color: #9ca3af;
+    transition: 0.3s;
+  }
+  .link:hover {
+    color: #818cf8;
+    padding-left: 6px;
+  }
+
+  /* Icons */
+  .icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #111827;
+    color: #a5b4fc;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .icon:hover {
+    background: linear-gradient(to right, #6366f1, #a855f7);
+    color: white;
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 10px 25px rgba(99,102,241,0.4);
+  }
+</style>

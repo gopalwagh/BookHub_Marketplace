@@ -16,6 +16,7 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  status: String
 });
 
 module.exports = mongoose.model("Order", orderSchema);

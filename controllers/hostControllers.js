@@ -1,4 +1,5 @@
 const Book = require("../models/bookModel");
+const Order = require("../models/orderModel");
 
 exports.getDashboard = async (req,res) => {
   
@@ -25,7 +26,7 @@ exports.getDashboard = async (req,res) => {
   .sort({createdAt : -1})
   .limit(5);
 
-  res.render("role/host",{
+  res.render("role/host/host",{
     pageTitle :"Host DashBoard",
     user : req.session.user,
     totalBooks,
@@ -42,7 +43,7 @@ exports.getAddBook = (req,res) => {
     return res.redirect("/login");
   }
 
-  res.render("role/add-book",{
+  res.render("role/host/add-book",{
     pageTitle : "Add Book"
   });
 }
@@ -99,7 +100,7 @@ exports.getMyBooks = async (req,res) => {
 
   const totalPages = Math.ceil(totalBooks/limit);
 
-  res.render("role/my-books",{
+  res.render("role/host/my-books",{
     pageTitle : "My Books",
     books,
     totalPages,
@@ -117,7 +118,7 @@ exports.getEditBook = async (req,res,next) => {
   const bookId = req.params.id;
   const book = await Book.findById(bookId);
 
-  res.render("role/edit-book",{
+  res.render("role/host/edit-book",{
     pageTitle : "Edit Book",
     book
   });
@@ -142,4 +143,46 @@ exports.postDeleteBook = async (req,res) => {
   console.log("Book deleted successfully",bookdeleted);
   
   res.redirect("/host/books");
+}
+
+exports.getHostOrders = async (req,res) => {
+  try{
+    const hostId = req.session.user.id;
+    const books = await Book.find({ owner : hostId });
+    const bookIds = books.map(book => book._id.toString());
+    const orders = await Order.find()
+      .populate("items.bookId")
+      .populate("userId")
+      .sort({ createdAt: -1 })
+    const filterOrders = [];
+    orders.forEach(order => {
+      const items = order.items.filter(item => item.bookId && bookIds.includes(item.bookId._id.toString()));
+      if(items.length >0){
+        filterOrders.push({
+          ...order._doc,
+          items
+        });
+      }
+    });
+    res.render("role/host/host_orders",{
+      pageTitle: "Host Orders",
+      orders : filterOrders,
+      user: req.session.user
+    })
+  }catch(err){
+    console.log(err);
+    res.send("Error Loading host Order")
+  }
+}
+
+exports.postUpdateOrderStatus = async(req,res) => {
+  try{
+    const orderId = req.body.orderId;
+    const status = req.body.status;
+    await Order.findByIdAndUpdate(orderId,{ status });
+    res.redirect("/host/orders");
+  }catch(err){
+    console.log(err);
+    res.send("Error Updating status");  
+  }
 }
