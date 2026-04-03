@@ -9,7 +9,7 @@
       Edit Profile
     </h2>
 
-    <a href="/profile" class="text-sm text-gray-500 hover:text-gray-800 transition">
+    <a href="/user/home" class="text-sm text-gray-500 hover:text-gray-800 transition">
       ← Back
     </a>
   </div>
@@ -53,7 +53,11 @@
           <!-- Address -->
           <div>
             <label class="text-xs text-gray-500">Address</label>
-            <textarea name="address"
+            <button type="button" onclick="getLocation()" 
+              class="text-xs text-blue-600 hover:underline">
+              📍 Use Current Location
+            </button>
+            <textarea id="address" name="address"
               class="w-full mt-1 border-b border-gray-300 py-2 focus:border-gray-900 focus:outline-none transition resize-none"><%= userData.address || '' %></textarea>
           </div>
 
@@ -61,13 +65,13 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="text-xs text-gray-500">City</label>
-              <input type="text" name="city" value="<%= userData.city || '' %>"
+              <input id="city" type="text" name="city" value="<%= userData.city || '' %>"
                 class="w-full mt-1 border-b border-gray-300 py-2 focus:border-gray-900 focus:outline-none transition">
             </div>
 
             <div>
               <label class="text-xs text-gray-500">Pincode</label>
-              <input type="text" name="pincode" value="<%= userData.pincode || '' %>"
+              <input id="pincode" type="text" name="pincode" value="<%= userData.pincode || '' %>"
                 class="w-full mt-1 border-b border-gray-300 py-2 focus:border-gray-900 focus:outline-none transition">
             </div>
           </div>
@@ -127,9 +131,4 @@
     </div>
   </div>
 </div>
-<script>     
-    setTimeout(() => {
-     const popup = document.getElementById("successPopup");
-        if (popup) popup.style.display = "none";
-    }, 3000);
-</script>
+<script src="/js/profile.js"></script>

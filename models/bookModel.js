@@ -10,6 +10,10 @@ const bookSchema = new mongoose.Schema({
         required : true,
         trim : true
     },
+    description: {
+        type: String,
+        default: ""
+    },
     price :{
         type :Number,
         required : true,

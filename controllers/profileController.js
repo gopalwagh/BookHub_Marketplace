@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const { validationResult } = require("express-validator");
+const axios = require("axios");
 
 exports.getProfile = async (req, res) => {
   try {
@@ -60,3 +61,27 @@ exports.postProfile = async (req, res) => {
 
   res.redirect("/profile");
 };
+
+exports.getAddress = async(req,res) => {
+  const {lat,lng} = req.query;
+  // fetch('/get-address?...') send a query parameter that's why user req.query instead of req.body
+  try{
+    const response = await axios.get(
+       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+       {
+        headers : {
+          "User-Agent": "book-marketplace-app"
+        }
+       }
+    );
+    const addr = response.data.address;
+    res.json({
+      city: addr.city || addr.town || addr.village || "",
+      pincode: addr.postcode || "",
+      fullAddress : response.data.display_name || ""
+    });
+  }catch(err){
+    console.log(err);
+    res.status(500).json({ errror: "Failed" });
+  }
+}

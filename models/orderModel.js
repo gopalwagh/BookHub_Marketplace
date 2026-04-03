@@ -8,6 +8,9 @@ const orderSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref: "Book"
       },
+      title: String,
+      price: Number,
+      photoUrl: String,
       quantity: Number
     }
   ],

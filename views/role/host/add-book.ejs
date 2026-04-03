@@ -3,7 +3,9 @@
 <body class="bg-gray-100 min-h-screen">
 
 <%- include("../../partials/navbar", { user: user }) %>
-
+<div id="customAlert" 
+  class="fixed top-5 right-5 hidden px-4 py-3 rounded-lg shadow-lg text-white text-sm z-50">
+</div>
 <div class="flex items-center justify-center py-12 px-4">
   <div class="w-full max-w-lg bg-white rounded-xl shadow-md p-8">
     <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
@@ -13,42 +15,59 @@
       <!-- Title -->
       <div>
         <label class="block text-sm font-medium text-gray-600 mb-1">Title</label>
-        <input 
-          type="text" 
-          name="title" 
-          required
-          placeholder="Enter book title"
-          class="w-full border border-gray-300 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <div class="flex gap-2">
+          <input 
+            id="title"
+            type="text" 
+            name="title" 
+            required
+            placeholder="Enter book title"
+            class="w-full border border-gray-300 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <button id="auto" type="button" onclick="fetchBookData()" 
+            class="bg-gray-800 text-white px-3 rounded-lg text-sm">
+            Auto
+          </button>
+        </div>
       </div>
       <!-- Author -->
       <div>
         <label class="block text-sm font-medium text-gray-600 mb-1">Author</label>
-        <input 
+        <input
+          id="author" 
           type="text" 
           name="author" 
           required
           placeholder="Enter author name"
           class="w-full border border-gray-300 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
       </div>
-      <!-- Price -->
       <div>
-        <label class="block text-sm font-medium text-gray-600 mb-1">Price</label>
-        <input 
-          type="number" 
-          name="price" 
-          required
-          placeholder="Enter price"
-          class="w-full border border-gray-300 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <label class="block text-sm font-medium text-gray-600 mb-1">Description</label>
+        <textarea 
+          id="description"
+          name="description"
+          rows="3"
+          placeholder="Book description"
+          class="w-full border border-gray-300 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
       </div>
-      <!-- Stock -->
-      <div>
-        <label class="block text-sm font-medium text-gray-600 mb-1">Stock</label>
-        <input 
-          type="number" 
-          name="stock" 
-          required
-          placeholder="Enter stock quantity"
-          class="w-full border border-gray-300 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+      <!-- Price -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-600 mb-1">Price</label>
+          <input 
+            type="number" 
+            name="price" 
+            required 
+            class="w-full border p-2.5 rounded-lg">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-600 mb-1">Stock</label>
+          <input 
+            type="number"
+            name="stock"
+            required 
+            class="w-full border p-2.5 rounded-lg">
+        </div>
       </div>
       <!-- Photo -->
       <div>
@@ -70,5 +89,5 @@
   </div>
 </div>
 </body>
-
+<script src="/js/add-book.js"></script>
 <%- include("../../partials/footer") %>

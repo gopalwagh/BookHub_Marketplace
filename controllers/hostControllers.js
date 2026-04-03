@@ -49,13 +49,14 @@ exports.getAddBook = (req,res) => {
 }
 
 exports.postAddBook = async (req,res) => {
-  const { title, author, price, stock} = req.body;
+  const { title, author, price, stock, description} = req.body;
   const photoUrl = "/uploads/" + req.file.filename;
   const ownerId = req.session.user.id;
 
   await Book.create({
     title,
     author,
+    description,
     price,
     stock,
     photoUrl,

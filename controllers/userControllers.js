@@ -194,7 +194,10 @@ exports.postOrder = async(req,res,next)=>{
             total += item.bookId.price * item.quantity;
             return {
                 bookId: item.bookId._id,
-                quantity: item.quantity
+                quantity: item.quantity,
+                price: item.bookId.price,
+                photoUrl: item.bookId.photoUrl,
+                title: item.bookId.title
             };
         });
         const order = new Order({

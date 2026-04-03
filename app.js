@@ -12,6 +12,7 @@ const hostRouter = require('./routes/hostRoutes');
 const userRouter = require('./routes/userRoutes');
 const profileRouter = require("./routes/profileRoutes")
 const errorsController = require('./controllers/errors');
+const bookRouter = require('./routes/bookRoutes');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 app.use(homeRouter);
 app.use(authRouter);
 app.use(profileRouter);
+app.use(bookRouter);
 app.use("/host",hostRouter);
 app.use("/user",userRouter);
 
