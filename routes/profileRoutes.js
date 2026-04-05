@@ -1,7 +1,7 @@
 const express = require("express");
 const { profileValidation } = require("../models/profileValidator");
 const profileController = require("../controllers/profileController");
-const isAuth = require("../models/isAuth");
+const isAuth = require("../middlewares/isAuth");
 
 const profileRouter = express.Router();
 

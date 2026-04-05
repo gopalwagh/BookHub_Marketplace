@@ -46,7 +46,15 @@ const userSchema = new mongoose.Schema({
   
   profileImage: {
     type: String // multer image path
-  }
+  },
+  verificationToken: String,
+  verificationExpiry: Date,
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  resetToken: String,
+  resetTokenExpiry: Date
 
 }, {
   timestamps: true 

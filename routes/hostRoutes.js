@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require("multer");
-const isAuth = require("../models/isAuth");
+const isAuth = require("../middlewares/isAuth");
 
 const upload = multer({ dest: "uploads/" });
 const hostRouter = express.Router();

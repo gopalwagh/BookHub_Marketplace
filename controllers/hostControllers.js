@@ -1,5 +1,8 @@
 const Book = require("../models/bookModel");
 const Order = require("../models/orderModel");
+const { orderShippedTemplate, orderDeliveredTemplate } = require("../utils/emailTemplates");
+const sendEmail = require("../utils/sendEmail");
+const User = require("../models/userModel");
 
 exports.getDashboard = async (req,res) => {
   
@@ -52,7 +55,15 @@ exports.postAddBook = async (req,res) => {
   const { title, author, price, stock, description} = req.body;
   const photoUrl = "/uploads/" + req.file.filename;
   const ownerId = req.session.user.id;
-
+  const categories = req.body.categories ? req.body.categories
+    .split(", ")
+    .map(c =>c.trim().toLowerCase())
+    .filter(c => c.length>0)
+    : [];
+  // fallback logic   
+  if(categories.length==0)  {
+    categories = ["general"];
+  }
   await Book.create({
     title,
     author,
@@ -60,6 +71,7 @@ exports.postAddBook = async (req,res) => {
     price,
     stock,
     photoUrl,
+    categories,
     owner : ownerId
   })
   res.redirect("/host/books");
@@ -178,9 +190,27 @@ exports.getHostOrders = async (req,res) => {
 
 exports.postUpdateOrderStatus = async(req,res) => {
   try{
-    const orderId = req.body.orderId;
-    const status = req.body.status;
-    await Order.findByIdAndUpdate(orderId,{ status });
+    const { orderId, status } = req.body;
+    // ismai order fetch ho raaha hai
+    const order = await Order.findById(orderId);
+    if(!order) return res.send("Order not Found");
+    // status update logic
+    order.status = status;
+    await order.save();
+    // User fetch karo
+    const user = await User.findById(order.userId);
+    if(status === "shipped"){
+      await sendEmail(user.email,
+        "Your order has been shipped 🚚",
+        orderShippedTemplate(user.firstName,order._id)
+      );
+    }
+    if(status === "delivered"){
+      await sendEmail(user.email,
+        "Order delivered 🎉",
+        orderDeliveredTemplate(user.firstName,order._id)
+      );
+    }
     res.redirect("/host/orders");
   }catch(err){
     console.log(err);

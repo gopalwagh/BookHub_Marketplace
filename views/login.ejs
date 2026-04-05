@@ -20,18 +20,29 @@
         type="email"
         name="email"
         placeholder="Email"
+        autocomplete= "off"
         class="w-full mb-4 p-2 border rounded"/>
 
       <input
         type="password"
         name="password"
         placeholder="Password"
+        autocomplete="off"
         class="w-full mb-4 p-2 border rounded"/>
-
+      <p class="text-sm mb-3 text-right">
+        <a href="/forgot-password" class="text-blue-500 hover:underline">
+          Forgot Password?
+        </a>
+      </p>
       <button
         class="bg-blue-500 text-white w-full p-2 rounded hover:bg-blue-600">
         Login
       </button>
+      <p class="text-sm mt-4 text-center">
+        Didn't verify? 
+        <a href="/resend-verification" class="text-blue-500">Resend Email</a>
+      </p>
+    </div>
     </form>
   </div>
 </body>

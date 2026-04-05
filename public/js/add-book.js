@@ -37,8 +37,11 @@ async function fetchBookData(){
         }
         // this is a first result
         const book = books[0];
+
         document.getElementById("author").value = book.authors?.join(", ") || "";
         document.getElementById("description").value = book.description || "";
+        document.getElementById("categories").value = book.categories?.join(", ") || "";
+        
         autoBtn.innerText = "Auto";
     }catch(err){
         console.log("error fetching Book data",err);

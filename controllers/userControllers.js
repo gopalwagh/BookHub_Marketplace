@@ -2,6 +2,9 @@ const Book = require("../models/bookModel");
 const Order = require("../models/orderModel");
 const Cart = require("../models/cartModel");
 const PDFDocument = require("pdfkit");
+const sendEmail = require("../utils/sendEmail");
+const { orderPlacedTemplate, newOrderTemplate } = require("../utils/emailTemplates");
+const User = require("../models/userModel");
 
 exports.getUserHome = (req,res,next) => {
     res.render("role/user/user",{
@@ -17,16 +20,20 @@ exports.getAllbooks = async(req,res) => {
         const limit = 16;
         const skip = (page - 1) * limit;
 
-        const category = req.query.category || "";
+        const selectedCategories = req.query.categories || "";
         const search = req.query.search || "";
         const sortOption = req.query.sort || "lastest";
         
-        const query = {};
+        let query = {};
         if(search){
             query.title = { $regex: search, $options : "i"};
         }
-        if(category){
-            query.category = category;
+        let categories = selectedCategories;
+        if(categories && !Array.isArray(categories)){
+            categories = [categories];
+        }
+        if(categories && categories.length>0){
+            query.categories = { $in: categories};
         }
 
         let sort = {};
@@ -58,7 +65,16 @@ exports.getAllbooks = async(req,res) => {
             .sort(sort)
             .skip(skip)
             .limit(limit);
-        
+        // uniques categories
+        const allBooks = await Book.find({},"categories");
+        let allCategories = [];
+        allBooks.forEach(book => {
+            if(book.categories){
+                allCategories.push(...book.categories);
+            }
+        });
+        const uniqueCategories = [...new Set(allCategories)];
+
         res.render("role/user/user_books",{
             pageTitle: "Browse Books",
             books,
@@ -69,8 +85,9 @@ exports.getAllbooks = async(req,res) => {
             hasPreviousPage : page>1,
             nextPage : page +1,
             previousPage :page-1,
-            category,
             sortOption,
+            categories: uniqueCategories,
+            selectedCategories: categories || [],
             user: req.session.user
         });
     }catch(err){
@@ -86,14 +103,32 @@ exports.getBookDetails = async(req,res)=> {
         if(!book){
             return res.send("Book not found");
         }
+        // similar category books fetch data
         const relatedBooks = await Book.find({
-            category: book.category,
-            _id: {$ne : bookId}
-        }).limit(4);
+            categories: {$in: book.categories},
+            _id: {$ne : book._id}
+        })
+        //// console.log(relatedBooks)
+        // ranking top 4 books in recommadation
+        const sortedBooks = relatedBooks.sort((a, b) => {
+            const bookCategories = book.categories.map(cat => cat.toLowerCase().trim());
+            const matchA = a.categories.filter(c =>
+                bookCategories.includes(c.toLowerCase().trim())
+            ).length;
+            const matchB = b.categories.filter(c =>
+                bookCategories.includes(c.toLowerCase().trim())
+            ).length;
+            return matchB - matchA;
+        });
+
+        const topBooks = sortedBooks.slice(0, Math.min(4, sortedBooks.length));
+        // console.log(sortedBooks);
+        // console.log(topBooks);
+        
         res.render("role/user/book_details",{
             pageTitle: book.title,
             book,
-            relatedBooks,
+            relatedBooks: topBooks,
             user: req.session.user
         });
     }
@@ -171,7 +206,10 @@ exports.postRemoveFromCart = async (req,res,next) => {
 exports.postOrder = async(req,res,next)=>{
     try{
         const userId = req.session.user.id;
-        const cart = await Cart.findOne({ userId }).populate("items.bookId");
+        const cart = await Cart.findOne({ userId }).populate({ 
+            path : "items.bookId",
+            populate : { path:"owner" }
+         });
         if(!cart || cart.items.length===0){
             return res.redirect("/user/cart");
         }
@@ -207,7 +245,39 @@ exports.postOrder = async(req,res,next)=>{
             status: "pending"
         });
         await order.save();
-        
+        // get the user 
+        const user = await User.findById(userId);
+        //User Email ki order Confirmed ho gaya
+        await sendEmail(user.email,
+            "Your BookHub order is confirmed",
+            orderPlacedTemplate(user.firstName,order._id)
+        )
+        /// get the host
+        const hostMap = {};
+        for(let item of cart.items){
+            const book = item.bookId;
+            const hostId = book.owner._id.toString();
+            if(!hostMap[hostId]){
+                hostMap[hostId] = [];
+            };
+
+            hostMap[hostId].push({
+                title: book.title,
+                quantity: item.quantity
+            });
+        }
+        // host ko email send if multiple or one 
+        for(let hostId in hostMap){
+            const host = await User.findById(hostId); 
+            const items = hostMap[hostId]
+                .map(item => `${item.title} (x${item.quantity})`)
+                .join("<br>");
+            
+            await sendEmail(host.email,
+                "New Order received 📦",
+                newOrderTemplate(order._id,items)
+            );
+        };
         await Cart.findOneAndDelete({ userId });
         req.session.success = "✅ Order placed successfully!";
         res.redirect("/user/orders");
