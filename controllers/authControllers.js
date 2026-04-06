@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
-const { verifyTemplate, resetTemplate } = require("../utils/emailTemplates");
+const { verifyTemplate } = require("../utils/emailTemplates");
 
 exports.getLogin = (req, res) => {
   res.render("login", {
@@ -79,7 +79,7 @@ exports.postSignup = async (req, res) => {
     });
 
     // verification link
-    const link = `http://localhost:3000/verify/${token}`;
+    const link = `${process.env.BASE_URL}/verify/${token}`;
 
     await sendEmail(
       email,
@@ -133,7 +133,7 @@ exports.postForgotPassword = async (req,res) => {
     return res.redirect("/forgot-password");
   }
   console.log("Email:", email);
-console.log("User:", user);
+  console.log("User:", user);
 
   // only verified User ke liye
   if(!user.isVerified){
@@ -145,8 +145,8 @@ console.log("User:", user);
   user.resetTokenExpiry = Date.now() + 3600000;
   await user.save();
 
-  const link =  `http://localhost:3000/reset/${token}`;
-console.log("Link:", link);
+  const link = `${process.env.BASE_URL}/verify/${token}`;
+  console.log("Link:", link);
   await sendEmail(
     email,
   "Reset your BookHub password 🔐",
@@ -222,7 +222,7 @@ exports.postResendVerification = async (req, res) => {
   user.verificationToken = token;
   user.verificationExpiry = Date.now() + 3600000;
   await user.save();
-  const link = `http://localhost:3000/verify/${token}`;
+  const link = `${process.env.BASE_URL}/verify/${token}`;
 
   await sendEmail(
     email,
