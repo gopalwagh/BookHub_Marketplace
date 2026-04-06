@@ -1,3 +1,5 @@
+const BASE_URL = process.env.BASE_URL;
+
 exports.baseTemplate = (title, content) => {
   return `
     <div style="font-family: Arial, sans-serif; background:#f4f4f4; padding:20px;">
@@ -35,19 +37,22 @@ exports.verifyTemplate = (name, link) => {
 };
 
 exports.resetTemplate = (name, link) => {
-  return `
-    <div style="font-family: Arial, sans-serif; padding:20px;">
-      <h2>Hello ${name}</h2>
+  return exports.baseTemplate(
+    "Reset Your Password",
+    `
+      <p>Hello ${name},</p>
       <p>You requested to reset your password.</p>
 
-      <a href="${link}" 
-         style="background:blue; color:white; padding:10px 15px; text-decoration:none;">
-         Reset Password
-      </a>
+      <div style="text-align:center; margin:20px;">
+        <a href="${link}" 
+           style="background:#ef4444; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
+           Reset Password
+        </a>
+      </div>
 
       <p>This link will expire in 1 hour.</p>
-    </div>
-  `;
+    `
+  );
 };
 
 exports.orderTemplate = (link) => {
@@ -76,7 +81,7 @@ exports.orderPlacedTemplate = (name, orderId) => {
       <p><b>Order ID:</b> ${orderId}</p>
 
       <div style="text-align:center; margin:20px;">
-        <a href="http://localhost:3000/user/orders" 
+        <a href="${BASE_URL}/user/orders" 
            style="background:#3b82f6; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
            View Orders
         </a>
@@ -97,7 +102,7 @@ exports.newOrderTemplate = (orderId, items) => {
       <p>${items}</p>
 
       <div style="text-align:center; margin:20px;">
-        <a href="http://localhost:3000/host/orders" 
+        <a href="${BASE_URL}/host/orders" 
            style="background:#10b981; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
            View Orders
         </a>
@@ -114,7 +119,7 @@ exports.orderShippedTemplate = (name, orderId) => {
       <p>Your order <b>#${orderId}</b> has been shipped.</p>
 
       <div style="text-align:center; margin:20px;">
-        <a href="http://localhost:3000/user/orders" 
+        <a href="${BASE_URL}/user/orders" 
            style="background:#f59e0b; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
            Track Order
         </a>
